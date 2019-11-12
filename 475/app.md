@@ -43,60 +43,35 @@
  * 39mb 74.45%
  */
 const findRadius = (houses, heaters) => {
-  let ans = Number.MIN_SAFE_INTEGER
-  // 排序
-  heaters.sort((a, b) => a - b)
-  const len = heaters.length
-
-  for (let i = 0, max = houses.length; i < max; i++) {
-    const house = houses[i]
-    const targetPos = binarySearch(heaters, 0, len - 1, house)
-    let closestDistance = Number.MAX_SAFE_INTEGER
-    if (heaters[targetPos] === house) {
-      ans = Math.max(ans, 0)
-      continue
-    }
-    // 比较前一个 和 后一个 得到最小值
-    // 算出距离该房子最近的左右两端加热器离房子的距离并取最小值
-    const pre = heaters[targetPos - 1]
-    const cur = heaters[targetPos]
-    if (pre !== undefined) {
-      closestDistance = Math.min(closestDistance, Math.abs(house - pre))
-    }
-    closestDistance = Math.min(closestDistance, Math.abs(house - cur))
-    // 取出这些最小值中的最大值
-    ans = Math.max(ans, closestDistance)
+ heaters.sort((n1, n2) => n1 - n2);
+  let i = 0, r = Number.MIN_SAFE_INTEGER;
+  while (i < houses.length ) {
+      console.log(i, getMinRadius(houses[i], heaters))
+    r = Math.max(r, getMinRadius(houses[i++], heaters))
   }
-
-  return ans
-}
-
-// 二分查找
-function binarySearch(array, start, end, target) {
-  while (start < end) {
-    const mid = Math.floor(start + (end - start) / 2)
-    const middle = array[mid]
-    if (target > middle) {
-      start = mid + 1
+  return r;};const getMinRadius = (num, nums) => {
+  let start = 0, end = nums.length - 1, mid = Math.floor((start + end) / 2);
+  if(num <= nums[0]) {
+    return nums[0] - num;
+  }
+  if(num >= nums[end]) {
+    return num - nums[end];
+  }
+  while(start < end) {
+    if(nums[mid] === num) {
+      return 0;
+    }
+    if(nums[mid] > num) {
+      end = mid;
+      mid = Math.floor((start + end) / 2);
     } else {
-      end = mid
+      start = mid + 1;
+      mid = Math.floor((start + end) / 2);
     }
   }
-  return start
-}
+  return Math.min(Math.abs(nums[mid] - num), Math.abs(nums[mid - 1] - num))}
 
 ```
 
-binarySearch(array, start, end, target) {
-    while(start < end) {
-        const mid = Math.floor(start + (end - start) / 2);
-        const middle = array[mid]
-        if (target > middle) {
-            start = mid + 1;
-        }else {
-            end = mid
-        }
-    }
-
-    return start
-}
+## 遇到问题
+ - 没有读懂题目
